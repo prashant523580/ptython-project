@@ -416,7 +416,8 @@ edit.add_command(label="Clear all", image=clear_all_icon, compound=tk.LEFT, acce
 edit.add_command(label="Find", image=find_icon, compound=tk.LEFT, accelerator="Ctrl + F" ,command=text_find)
 
 
-#view check button
+
+## set toggle check button 
 show_toolbar = tk.BooleanVar()
 show_toolbar.set(True)
 show_statusbar = tk.BooleanVar()
@@ -427,12 +428,12 @@ def hide_tools():
         tool_bar.pack_forget()
         show_toolbar = False
     else:
-        text_editor.pack_forget()
-        status_bar.pack_forget()
-        tool_bar.pack(side=tk.TOP, fill=tk.X)
-        text_editor.pack(fill=tk.BOTH, expand=True)
-        status_bar.pack(side=tk.BOTTOM)
-        show_toolbar = True
+        text_editor.pack_forget() #FORGET text editor 
+        status_bar.pack_forget() #forget status bar
+        tool_bar.pack(side=tk.TOP, fill=tk.X) #set tool bar
+        text_editor.pack(fill=tk.BOTH, expand=True) #set text editor
+        status_bar.pack(side=tk.BOTTOM) #set status bar
+        show_toolbar = True 
 def hide_status():
     global show_statusbar
     if show_statusbar:
@@ -443,8 +444,8 @@ def hide_status():
         show_statusbar = True
 
 #view content
-# view.add_command(label="Tools", image=tool_bar_icon,compound=tk.LEFT, accelerator="Ctrl + C")
-# view.add_command(label="Status", image=status_bar_icon,compound=tk.LEFT, accelerator="Ctrl + X")
+#view check button########
+#we can take both true or 1 and 0 or false on onvalue and offvalue
 view.add_checkbutton(label='Tools', onvalue=True,offvalue=0,variable=show_toolbar,image=tool_bar_icon,compound=tk.LEFT,command=hide_tools)
 view.add_checkbutton(label='Status Bar',onvalue=1,offvalue=False,variable=show_statusbar, image=tool_bar_icon,compound=tk.LEFT,command=hide_status)
 
@@ -454,20 +455,33 @@ view.add_checkbutton(label='Status Bar',onvalue=1,offvalue=False,variable=show_s
 
 #content theme
 theme_var = tk.StringVar()
+#store  theme colour in tuple 
 theme_color_icon = (light_default_icon,green_icon,black_icon,green_icon)
 
+    
+# theme colour
 color_dict = {
     'Light Default' : ('#000000','#ffffff'),
-    'Green ' : ('green','black'),
+    'Green ' : ('green','gray'),
     'Red' : ('red','black'),
-    'Gray': ('gray', 'black')
+    'Gray': ('gray', 'yellow')
 }
-# color theme
+def change_theme(event=None):
+    choosen_theme = theme_var.get()
+    color_tuple = color_dict.get(choosen_theme)
+    # print(color_tuple)
+    fg_color , bg_color = color_tuple[0],color_tuple[1]
+    text_editor.config(background=bg_color,foreground=fg_color)
+    
+
+
 count = 0
 
 for i in color_dict:
-    color_theme.add_radiobutton(label=i,image=theme_color_icon[count],variable=theme_var,compound=tk.LEFT)
+    color_theme.add_radiobutton(label=i,image=theme_color_icon[count],variable=theme_var,compound=tk.LEFT,command=change_theme)
     count += 1
+
+
 
 
 
@@ -475,4 +489,11 @@ for i in color_dict:
 
 
 main_application.config(menu=navbar_menu)
+
+#bin shortcut keys 
+main_application.bind("<Control-n>", new_file_func)
+main_application.bind("<Control-o>",open_file_func)
+main_application.bind("<Control-s>", save_file_func)
+main_application.bind("<Control-Shift-s>", save_as_func)
+main_application.bind("<Control-x>",exit_func )
 main_application.mainloop()
